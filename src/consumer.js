@@ -2,11 +2,14 @@ require('dotenv').config();
 const amqp = require('amqplib');
 
 const Listener = require('./listener');
+const MailSender = require('./MailSender');
 const PlaylistService = require('./PlaylistsService');
 
 const init = async () => {
   const playlistService = new PlaylistService();
-  const listener = new Listener(playlistService);
+  const mailSender = new MailSender();
+
+  const listener = new Listener(playlistService, mailSender);
 
   const connection = await amqp.connect(process.env.RABBITMQ_SERVER);
   const channel = await connection.createChannel();
